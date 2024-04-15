@@ -14,10 +14,10 @@ class m240414_235858_user extends Migration
     {
         $this->createTable('users', [
             'id' => $this->primaryKey(),
-            'name' => $this->string(60)->notNull(),
-            'email' => $this->string(60)->notNull(),
+            'username' => $this->string(60)->notNull(),
             'password' => $this->string(10)->notNull(),
-            'date_created' => $this->dateTime()->notNull()
+            'authKey' => $this->dateTime()->notNull(),
+            'accessToken' => $this->dateTime()->notNull()
         ]);
     }
 
