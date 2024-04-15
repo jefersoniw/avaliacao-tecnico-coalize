@@ -7,11 +7,27 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'homeUrl'=> ['site/login'],
+    'charset' => 'UTF-8',
+    'timeZone' => 'America/Bahia',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        '@root' => 'basico',
     ],
     'components' => [
+        'formatter' => [
+            'dateFormat' => 'dd/MM/yyyy',
+            'defaultTimeZone' => 'UTC',
+            'timeZone' => 'America/Bahia',
+            'locale' => 'pt-BR',
+            'decimalSeparator' => ',',
+            'thousandSeparator' => '.',
+            'currencyCode' => 'BRL',
+            'numberFormatterSymbols' => [
+                NumberFormatter::CURRENCY_SYMBOL => 'R$ ',
+            ]
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'Dg9PSM7cjoxg3lk7uWvLbADgA9FyWPnV',
@@ -21,7 +37,7 @@ $config = [
         ],
         'user' => [
             'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'enableAutoLogin' => false,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -38,6 +54,50 @@ $config = [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                ],
+            ],
+        ],
+        'assetManager' => [
+            'bundles' => [
+//                    'yii\web\JqueryAsset' => false,
+//                    'yii\web\YiiAsset' => false,
+                'dosamigos\google\maps\MapAsset' => [
+                    'options' => [
+                        'key' => 'AIzaSyCR_pKE94LCNQV5FUej1yhk2vfPfRSKPLo',
+                        'language' => 'pt-BR',
+                        'version' => '3.1.18'
+                    ]
+                ]
+            ]
+        ],
+        'urlManager' => [
+            'class' => 'yii\web\UrlManager',
+            'enablePrettyUrl' => true,
+            'showScriptName' => true,
+            'rules' => [
+                '<controller:\w+>/<id:\d+>' => '<controller>/view',
+                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>'
+            ],
+        ],
+        'i18n' => [
+            'translations' => [
+                'app' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/components/messages',
+                    'fileMap' => [
+                        'app' => 'app.php',
+                        'app/error' => 'error.php',
+                    ],
+                ],
+                'yii' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/components/messages',
+                    'fileMap' => [
+                        'app' => 'app.php',
+                        'app/error' => 'error.php',
+                    ],
                 ],
             ],
         ],
@@ -67,7 +127,7 @@ if (YII_ENV_DEV) {
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['127.0.0.1', '127.0.0.1:8080', '::1', 'localhost', '192.168.0.*', '172.25.0.*'],
     ];
 }
 
