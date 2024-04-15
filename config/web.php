@@ -61,13 +61,6 @@ $config = [
             'bundles' => [
 //                    'yii\web\JqueryAsset' => false,
 //                    'yii\web\YiiAsset' => false,
-                'dosamigos\google\maps\MapAsset' => [
-                    'options' => [
-                        'key' => 'AIzaSyCR_pKE94LCNQV5FUej1yhk2vfPfRSKPLo',
-                        'language' => 'pt-BR',
-                        'version' => '3.1.18'
-                    ]
-                ]
             ]
         ],
         'urlManager' => [
