@@ -99,6 +99,19 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
      */
     public function validatePassword($password)
     {
-        return $this->password === $password;
+        return $this->password === sha1($password);
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                $this->authKey = \Yii::$app->security->generateRandomString();
+                $this->accessToken = \Yii::$app->security->generateRandomString();
+                $this->password = sha1($this->password);
+            }
+            return true;
+        }
+        return false;
     }
 }
