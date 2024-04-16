@@ -2,23 +2,65 @@
 
 namespace app\controllers;
 
-use yii\filters\auth\HttpBearerAuth;
-use yii\web\Controller;
+use app\models\User;
+use Exception;
+use Yii;
 
-class UserController extends Controller
+class UserController extends \yii\web\Controller
 {
-    public function behaviors()
-    {
-        return [
-            'bearerAuth' => [
-                'class' => HttpBearerAuth::class,
-            ]
-        ];
-    }
+    public $enableCsrfValidation = false;
 
     public function actionIndex()
     {
-        var_dump('im here');exit;
+        $users = User::find()->all();
+
+        return $this->asJson($users);
+    }
+
+    public function actionCreate()
+    {
+        $request = Yii::$app->request->post();
+
+        try{
+
+            if(empty($request['username']) || empty($request['password'])){
+                throw new Exception('username or passsword empty!');
+            }
+
+            $userExists = User::findByUsername($request['username']);
+
+            if(!empty($userExists)){
+                throw new Exception('user exists!');
+            }
+
+            $user = new User();
+            $user->username = $request['username'];
+            $user->password = sha1($request['password']);
+            $user->authKey = Yii::$app->security->generateRandomString();
+            $user->accessToken = Yii::$app->security->generateRandomString();
+            if(!$user->save(false)){
+                throw new Exception("Error insert User");
+            };
+
+            return $this->asJson([
+                'error' => false,
+                'msg' => 'Created',
+                'data' => [
+                    'name' => $user->username,
+                    'accessToken' => $user->accessToken
+                ],
+            ]);
+
+        }catch(Exception $error){
+
+            return $this->asJson([
+                'error' => true,
+                'msg' => $error->getMessage(),
+                'line' => $error->getLine(),
+                'file' => $error->getFile(),
+            ]);
+
+        }
     }
 
 }
