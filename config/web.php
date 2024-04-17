@@ -80,7 +80,9 @@ $config = [
                 'POST users' => 'user/create',
                 'POST login' => 'login/index',
                 'GET client' => 'client/index',
-                'POST client' => 'client/create'
+                'POST client' => 'client/create',
+                'GET product' => 'product/index',
+                'POST product' => 'product/create',
             ],
         ],
         'i18n' => [

@@ -27,7 +27,7 @@ class ClientController extends \yii\web\Controller
                 QueryParamAuth::class,
             ],
         ];
-        
+
         return $behaviors;
     }
 
@@ -41,7 +41,7 @@ class ClientController extends \yii\web\Controller
     public function actionCreate()
     {
         $request = Yii::$app->request->post();
-        
+
         try {
             Client::validadeInputClient($request);
 
@@ -49,7 +49,7 @@ class ClientController extends \yii\web\Controller
 
             $cpfIsValid = Helpers::validaCPF($cpf);
 
-            if(!$cpfIsValid){
+            if (!$cpfIsValid) {
                 return $this->asJson([
                     'error' => true,
                     'msg' => 'CPF inválido!'
@@ -58,10 +58,17 @@ class ClientController extends \yii\web\Controller
 
             $clientExists = Client::find()->where(['cpf' => $cpf])->one();
 
-            if(!empty($clientExists)){
+            if (!empty($clientExists)) {
                 return $this->asJson([
                     'error' => true,
                     'msg' => 'Client já existe!'
+                ]);
+            }
+
+            if (!$_FILES) {
+                return $this->asJson([
+                    'error' => true,
+                    'msg' => 'Campo photo obrigatório!'
                 ]);
             }
 
@@ -70,9 +77,7 @@ class ClientController extends \yii\web\Controller
             );
             $mime = 'data:' . $_FILES['photo']['type'] . ';base64,';
 
-            $photo = $mime.$base64;
-
-        
+            $photo = $mime . $base64;
 
             $client = Client::createClient($request, $photo);
 
@@ -81,8 +86,7 @@ class ClientController extends \yii\web\Controller
                 'msg' => 'Client cadastrado!',
                 'data' => $client,
             ]);
-
-        }catch(Exception $error){
+        } catch (Exception $error) {
 
             return $this->asJson([
                 'error' => true,
@@ -90,8 +94,6 @@ class ClientController extends \yii\web\Controller
                 'line' => $error->getLine(),
                 'file' => $error->getFile(),
             ]);
-
         }
     }
-
 }

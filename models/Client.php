@@ -78,7 +78,7 @@ class Client extends \yii\db\ActiveRecord
         $client->photo = $photo;
         $client->address_text = $request['address'];
         $client->sex = $request['sex'];
-        if(!$client->save(false)){
+        if (!$client->save(false)) {
             throw new Exception("Erro ao salvar cliente!");
         }
 
@@ -87,16 +87,16 @@ class Client extends \yii\db\ActiveRecord
 
     public static function validadeInputClient($request)
     {
-        if(empty($request['name'])){
+        if (empty($request['name'])) {
             throw new Exception('Name obrigatório!');
         }
-        if(empty($request['cpf'])){
+        if (empty($request['cpf'])) {
             throw new Exception('CPF obrigatório!');
         }
-        if(empty($request['address'])){
+        if (empty($request['address'])) {
             throw new Exception('Address obrigatório!');
         }
-        if(empty($request['sex'])){
+        if (empty($request['sex'])) {
             throw new Exception('Sex obrigatório!');
         }
 
