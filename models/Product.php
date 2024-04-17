@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Exception;
 use Yii;
 
 /**
@@ -61,5 +62,36 @@ class Product extends \yii\db\ActiveRecord
     public function getClient()
     {
         return $this->hasOne(Client::class, ['id' => 'client_id']);
+    }
+
+    public static function valideInputProduct($request)
+    {
+        if (empty($request['name'])) {
+            throw new Exception('Name obrigatório!');
+        }
+        if (empty($request['price'])) {
+            throw new Exception('Price obrigatório!');
+        }
+        if (empty($request['client'])) {
+            throw new Exception('Client obrigatório!');
+        }
+
+        return true;
+    }
+
+    public static function createProduct($request, $photo)
+    {
+        $price = str_replace(['.', ','], ['', '.'], $request['price']);
+
+        $product = new Self;
+        $product->name = $request['name'];
+        $product->price = number_format($price, 2, '.', '');
+        $product->photo = $photo;
+        $product->client_id = $request['client'];
+        if (!$product->save(false)) {
+            throw new Exception("Erro ao salvar produto!");
+        }
+
+        return $product;
     }
 }
