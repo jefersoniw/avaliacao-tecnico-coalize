@@ -12,7 +12,7 @@ class UserController extends \yii\web\Controller
 
     public function actionIndex()
     {
-        $users = User::find()->all();
+        $users = User::find()->select(['id', 'username'])->all();
 
         return $this->asJson($users);
     }
@@ -30,12 +30,12 @@ class UserController extends \yii\web\Controller
             $userExists = User::findByUsername($request['username']);
 
             if(!empty($userExists)){
-                throw new Exception('user exists!');
+                throw new Exception('user already exists!');
             }
 
             $user = new User();
             $user->username = $request['username'];
-            $user->password = sha1($request['password']);
+            $user->password = $request['password'];
             $user->authKey = Yii::$app->security->generateRandomString();
             $user->accessToken = Yii::$app->security->generateRandomString();
             if(!$user->save(false)){
