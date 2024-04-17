@@ -15,8 +15,9 @@ class m240415_000611_client extends Migration
         $this->createTable('clients', [
             'id' => $this->primaryKey(),
             'name' => $this->string(60)->notNull(),
+            'cpf' => $this->string(11)->notNull(),
             'address_text' => $this->text()->notNull(),
-            'photo' => $this->string()->notNull(),
+            'photo' => 'LONGTEXT',
             'sex' => $this->char('1')->notNull(),
         ]);
     }
