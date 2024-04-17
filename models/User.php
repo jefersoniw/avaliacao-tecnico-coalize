@@ -131,7 +131,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         $user->authKey = Yii::$app->security->generateRandomString();
         $user->accessToken = Yii::$app->security->generateRandomString();
         if(!$user->save(false)){
-            throw new Exception("Error insert User");
+            throw new Exception("Erro ao cadastrar usuário!");
         };
 
         return $user;

@@ -24,20 +24,20 @@ class UserController extends \yii\web\Controller
         try{
 
             if(empty($request['username']) || empty($request['password'])){
-                throw new Exception('username or passsword empty!');
+                throw new Exception('username ou passsword vazio!');
             }
 
             $userExists = User::findByUsername($request['username']);
 
             if(!empty($userExists)){
-                throw new Exception('user already exists!');
+                throw new Exception('Usuário já existe!');
             }
 
             $user = User::createUser($request);
 
             return $this->asJson([
                 'error' => false,
-                'msg' => 'Created',
+                'msg' => 'Usuário cadastrado!',
                 'data' => [
                     'name' => $user->username,
                     'accessToken' => $user->accessToken
