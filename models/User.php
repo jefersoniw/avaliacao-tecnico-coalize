@@ -122,4 +122,18 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 
         }
     }
+
+    public static function createUser($request)
+    {
+        $user = new self();
+        $user->username = $request['username'];
+        $user->password = $request['password'];
+        $user->authKey = Yii::$app->security->generateRandomString();
+        $user->accessToken = Yii::$app->security->generateRandomString();
+        if(!$user->save(false)){
+            throw new Exception("Error insert User");
+        };
+
+        return $user;
+    }
 }

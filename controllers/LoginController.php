@@ -33,11 +33,13 @@ class LoginController extends \yii\web\Controller
         $res = $user->generateNewToken($user->id);
 
         return $this->asJson([
+            'error' => false,
             'msg' => 'Login realizado com sucesso!',
-            'username' => $res->username,
-            'accessToken' => $res->accessToken
+            'data' => [
+                'username' => $res->username,
+                'accessToken' => $res->accessToken
+            ]
         ]);
-
     }
 
 }

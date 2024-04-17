@@ -33,14 +33,7 @@ class UserController extends \yii\web\Controller
                 throw new Exception('user already exists!');
             }
 
-            $user = new User();
-            $user->username = $request['username'];
-            $user->password = $request['password'];
-            $user->authKey = Yii::$app->security->generateRandomString();
-            $user->accessToken = Yii::$app->security->generateRandomString();
-            if(!$user->save(false)){
-                throw new Exception("Error insert User");
-            };
+            $user = User::createUser($request);
 
             return $this->asJson([
                 'error' => false,
