@@ -78,6 +78,7 @@ $config = [
                 '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
                 'GET users' => 'user/index',
                 'POST users' => 'user/create',
+                'POST login' => 'login/index',
                 'GET client' => 'client/index',
                 'POST client' => 'client/create'
             ],

@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Exception;
 use Yii;
 use yii\web\IdentityInterface;
 
@@ -83,7 +84,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 
     public function validatePassword($password)
     {
-        return $this->password === sha1($password);
+        return $this->password === md5($password);
     }
 
     public function beforeSave($insert)
@@ -92,10 +93,47 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             if ($this->isNewRecord) {
                 $this->authKey = Yii::$app->security->generateRandomString();
                 $this->accessToken = Yii::$app->security->generateRandomString();
-                $this->password = sha1($this->password);
+                $this->password = md5($this->password);
             }
             return true;
         }
         return false;
+    }
+
+    public function generateNewToken($id)
+    {
+        try{
+
+            $login = $this->findOne($id);
+            $login->authKey = Yii::$app->security->generateRandomString();
+            $login->accessToken = Yii::$app->security->generateRandomString();
+            if(!$login->save(false)){
+                throw new Exception("Erro ao fazer login!");
+            }
+
+            return $login;
+
+        }catch(Exception $error){
+
+            return $this->$this->asJson([
+                'error' => true,
+                'msg' => $error->getMessage()
+            ]);
+
+        }
+    }
+
+    public static function createUser($request)
+    {
+        $user = new self();
+        $user->username = $request['username'];
+        $user->password = $request['password'];
+        $user->authKey = Yii::$app->security->generateRandomString();
+        $user->accessToken = Yii::$app->security->generateRandomString();
+        if(!$user->save(false)){
+            throw new Exception("Erro ao cadastrar usuário!");
+        };
+
+        return $user;
     }
 }

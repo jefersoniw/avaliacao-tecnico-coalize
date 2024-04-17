@@ -17,7 +17,7 @@ class m240415_001203_product extends Migration
             'name' => $this->string()->notNull(),
             'price' => $this->decimal(10,2)->notNull(),
             'client_id' => $this->integer()->notNull(),
-            'photo' => $this->string()->notNull()
+            'photo' => 'LONGTEXT'
         ]);
 
         $this->addForeignKey('fk_products_client', 'products', 'client_id', 'clients', 'id');

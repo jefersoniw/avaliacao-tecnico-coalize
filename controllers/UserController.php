@@ -12,7 +12,7 @@ class UserController extends \yii\web\Controller
 
     public function actionIndex()
     {
-        $users = User::find()->all();
+        $users = User::find()->select(['id', 'username'])->all();
 
         return $this->asJson($users);
     }
@@ -24,27 +24,20 @@ class UserController extends \yii\web\Controller
         try{
 
             if(empty($request['username']) || empty($request['password'])){
-                throw new Exception('username or passsword empty!');
+                throw new Exception('username ou passsword vazio!');
             }
 
             $userExists = User::findByUsername($request['username']);
 
             if(!empty($userExists)){
-                throw new Exception('user exists!');
+                throw new Exception('Usuário já existe!');
             }
 
-            $user = new User();
-            $user->username = $request['username'];
-            $user->password = sha1($request['password']);
-            $user->authKey = Yii::$app->security->generateRandomString();
-            $user->accessToken = Yii::$app->security->generateRandomString();
-            if(!$user->save(false)){
-                throw new Exception("Error insert User");
-            };
+            $user = User::createUser($request);
 
             return $this->asJson([
                 'error' => false,
-                'msg' => 'Created',
+                'msg' => 'Usuário cadastrado!',
                 'data' => [
                     'name' => $user->username,
                     'accessToken' => $user->accessToken
