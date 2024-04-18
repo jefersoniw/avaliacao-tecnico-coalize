@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Product;
 use Exception;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\HttpBearerAuth;
@@ -32,15 +33,33 @@ class ProductController extends \yii\web\Controller
     {
 
         $filter = yii::$app->request->get();
+        $conditions = [];
 
-        if (!empty($filter)) {
-            var_dump($filter);
-            exit;
+        if (!empty($filter['client_id'])) {
+
+            $conditions = ['client_id' => $filter['client_id']];
         }
 
-        $products = Product::find()->all();
+        $products = Product::find()->where($conditions);
 
-        return $this->asJson($products);
+        $provider = new ActiveDataProvider([
+            'query' => $products,
+            'pagination' => [
+                'pageSize' => 1
+            ]
+        ]);
+
+        $totalProducts = $provider->getTotalCount();
+        $itensPorPagina = $provider->getCount();
+
+        $allProducts = $provider->getModels();
+
+
+        return $this->asJson([
+            'total_de_clientes' => $totalProducts,
+            'itens_por_pagina' => $itensPorPagina,
+            'dados' => $allProducts
+        ]);
     }
 
     public function actionCreate()

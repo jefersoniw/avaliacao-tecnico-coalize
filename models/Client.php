@@ -69,7 +69,6 @@ class Client extends \yii\db\ActiveRecord
 
     public static function createClient($request, $photo)
     {
-
         $cpf = str_replace(['.', '/', '-'], '', $request['cpf']);
 
         $client = new Self;
