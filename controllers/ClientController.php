@@ -6,6 +6,7 @@ use app\components\util\Helpers;
 use app\models\Client;
 use Exception;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\HttpBearerAuth;
@@ -33,9 +34,25 @@ class ClientController extends \yii\web\Controller
 
     public function actionIndex()
     {
-        $clients = Client::find()->all();
+        $clients = Client::find();
 
-        return $this->asJson($clients);
+        $provider = new ActiveDataProvider([
+            'query' => $clients,
+            'pagination' => [
+                'pageSize' => 5
+            ]
+        ]);
+
+        $totalClients = $provider->getTotalCount();
+        $itensPorPagina = $provider->getCount();
+
+        $allClients = $provider->getModels();
+
+        return $this->asJson([
+            'total_de_clientes' => $totalClients,
+            'itens_por_pagina' => $itensPorPagina,
+            'dados' => $allClients,
+        ]);
     }
 
     public function actionCreate()
