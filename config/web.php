@@ -7,7 +7,7 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    'homeUrl'=> ['site/login'],
+    'homeUrl' => ['site/login'],
     'charset' => 'UTF-8',
     'timeZone' => 'America/Bahia',
     'aliases' => [
@@ -62,8 +62,8 @@ $config = [
         ],
         'assetManager' => [
             'bundles' => [
-//                    'yii\web\JqueryAsset' => false,
-//                    'yii\web\YiiAsset' => false,
+                //                    'yii\web\JqueryAsset' => false,
+                //                    'yii\web\YiiAsset' => false,
             ]
         ],
         'urlManager' => [
